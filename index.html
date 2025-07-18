@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hacker Anonymous</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: black;
+      font-family: "Share Tech Mono", monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #center-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80vw; /* responsive width */
+      max-width: 800px;
+      opacity: 0.8;
+      z-index: 1;
+    }
+
+    #textFieldHack {
+      padding: 10px;
+      font-size: 16px;
+      width: 80vw;
+      max-width: 300px;
+      margin-bottom: 10px;
+    }
+
+    #nyalakan {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #input-container {
+      position: relative;
+      z-index: 2;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="input-container">
+    <input type="text" id="textFieldHack" placeholder="Masukkan teks...">
+    <br>
+    <button onclick="nyalakanMatrix()" id="nyalakan">Hack</button>
+  </div>
+
+  <div id="content" style="display: none;">
+    <img id="center-image" src="anonymous.png" alt="Anonymous">
+    <canvas id="matrix"></canvas>
+    <audio id="myAudio" hidden controls>
+      <source src="JOKER LAY LAY SONG REMIX VERSI JOKER.mp3" type="audio/mpeg">
+      Browsermu tidak mendukung tag audio, upgrade donk!
+    </audio>
+  </div>
+
+  <script>
+    function playAudio() {
+      const audio = document.getElementById("myAudio");
+      audio.play();
+    }
+
+    function nyalakanMatrix() {
+      playAudio();
+      document.getElementById("content").style.display = "block";
+      document.getElementById("input-container").style.display = "none";
+
+      const textValue = document.getElementById("textFieldHack").value;
+      const canvas = document.getElementById('matrix');
+      const ctx = canvas.getContext('2d');
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      // Initial size
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      const chars = 'アァイィウヴエエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const letters = chars.split('');
+      const fontSize = 16;
+      const columns = Math.floor(canvas.width / fontSize);
+      const drops = Array(columns).fill(1);
+
+      function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#0F0';
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = textValue + letters[Math.floor(Math.random() * letters.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+
+          drops[i]++;
+        }
+      }
+
+      setInterval(draw, 33);
+    }
+  </script>
+</body>
+</html>
