@@ -66,19 +66,105 @@
       border-radius: 10px;
       text-align: center;
     }
+
+
+    /* laoding bar */
+   .progress-container {
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 800px;
+      opacity: 0.8;
+      z-index: 1;
+      width: 80%;
+     
+      background: #2c2c2c;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+
+    }
+
+    .progress-bar {
+      height: 25px;
+      width: 0;
+      background: linear-gradient(90deg, #00c6ff, #0072ff, #00c6ff);
+      background-size: 300% 100%;
+      animation: loadingGradient 1.5s infinite linear, pulse 2s infinite ease-in-out;
+      transition: width 0.5s ease-out;
+    }
+
+    @keyframes loadingGradient {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.2); }
+    }
+
+    .progress-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 0;
+      height: 100%;
+      line-height: 25px;
+      font-weight: bold;
+      color: white;
+      font-size: 14px;
+      z-index: 1;
+    }
+
+    .progress-results{
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      color: #fff;
+      font-weight: bold;
+      font-size: 40px;
+      transform: translate(-50%, -50%);
+      opacity: 0.8;
+      z-index: 1;
+
+    }
+
   </style>
 </head>
 <body>
 
   <div id="input-container">
-    <input type="text" id="textFieldHack" placeholder="Masukkan teks...">
+    <input type="text" id="textFieldHack" placeholder="Masukkan Nama Yang Ingin Di Hack...">
     <br>
     <button onclick="nyalakanMatrix()" id="nyalakan">Hack</button>
   </div>
 
   <div id="content" style="display: none;">
+       <div class="progress-results" id="progressResults"></div>
     <img id="center-image" src="anonymous.png" alt="Anonymous">
+
+       
+
+    <!-- progress -->
+        <div class="progress-container">
+        <div class="progress-bar" id="loadingbar"></div>
+        <div class="progress-text" id="progress-text">0%</div>
+       </div>
+  
+
+ 
+
+
+
+
+    <!-- canvas -->
     <canvas id="matrix"></canvas>
+
+  
+    
+    <!-- audio -->
     <audio id="myAudio" hidden controls>
       <source src="JOKER LAY LAY SONG REMIX VERSI JOKER.mp3" type="audio/mpeg">
       Browsermu tidak mendukung tag audio, upgrade donk!
@@ -86,12 +172,33 @@
   </div>
 
   <script>
+
+
+
     function playAudio() {
       const audio = document.getElementById("myAudio");
-      audio.play();
+      // audio.play();
     }
 
     function nyalakanMatrix() {
+       //loading bar
+    // Simulasi loading (meningkatkan width setiap 100ms)
+     let progress = 0;
+    const loadingBar = document.getElementById("loadingbar");
+    const progressText = document.getElementById("progress-text");
+    const progressResults = document.getElementById("progressResults");
+
+    const interval = setInterval(() => {
+      if (progress >= 100) {
+        clearInterval(interval);
+        progressText.innerText = "Done!";
+        progressResults.innerText = "Hack "+ textValue+ " Success";
+      } else {
+        progress += 1;
+        loadingBar.style.width = progress + "%";
+        progressText.innerText = progress + "%";
+      }
+    }, 60); // kecepatan loading
       playAudio();
       document.getElementById("content").style.display = "block";
       document.getElementById("input-container").style.display = "none";
@@ -136,6 +243,9 @@
 
       setInterval(draw, 33);
     }
+
+
+   
   </script>
 </body>
 </html>
